@@ -78,6 +78,11 @@ const useAuthStore = create((set) => ({
       });
     }
   },
+
+  updateUser: (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    set({ user: userData });
+  }
 }));
 
-export default useAuthStore; 
+export default useAuthStore;
