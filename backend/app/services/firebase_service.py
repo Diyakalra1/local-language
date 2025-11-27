@@ -1,17 +1,23 @@
 import firebase_admin
-from firebase_admin import credentials, firestore, auth
+from firebase_admin import credentials, firestore
 from typing import Optional, Dict, Any
 from datetime import datetime
-import os
+from ..core.config import settings
 
 class FirebaseService:
     def __init__(self):
-        # Initialize Firebase Admin
-        cred_path = os.path.join(os.path.dirname(__file__), '../../firebase-credentials-local-language.json')
-        
+        # Initialize Firebase Admin (production-ready)
         if not firebase_admin._apps:
-            cred = credentials.Certificate(cred_path)
-            firebase_admin.initialize_app(cred)
+            try:
+                # Get credentials from settings (supports multiple sources)
+                cred_dict = settings.get_firebase_credentials()
+                cred = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(cred)
+                print("✅ Firebase initialized successfully")
+                print(f"📦 Environment: {settings.ENVIRONMENT}")
+            except Exception as e:
+                print(f"❌ Firebase initialization error: {e}")
+                raise
         
         self.db = firestore.client()
     
@@ -116,6 +122,18 @@ class FirebaseService:
         except Exception as e:
             print(f"Error getting messages: {e}")
             return []
+    
+    async def mark_message_read(self, message_id: str) -> bool:
+        """Mark a message as read"""
+        try:
+            self.db.collection('messages').document(message_id).update({
+                'read': True,
+                'read_at': datetime.utcnow()
+            })
+            return True
+        except Exception as e:
+            print(f"Error marking message read: {e}")
+            return False
 
 # Create singleton instance
 firebase_service = FirebaseService()
