@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import socketio
 from .api import auth, chat
+from .core.config import settings
 
 # Create FastAPI app
 app = FastAPI(
@@ -21,10 +22,11 @@ sio = socketio.AsyncServer(
 # Wrap with Socket.IO
 socket_app = socketio.ASGIApp(sio, app)
 
-# CORS middleware - MUST be after Socket.IO wrap
+# CORS middleware - Use settings
+allowed_origins = settings.ALLOWED_ORIGINS.split(',')
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,7 +59,7 @@ async def root():
 async def health():
     return {"status": "healthy", "online_users": len(online_users)}
 
-# Socket.IO events
+# Socket.IO events with error handling
 @sio.event
 async def connect(sid, environ):
     print(f"✅ Client connected: {sid}")
@@ -74,83 +76,122 @@ async def disconnect(sid):
 @sio.event
 async def user_online(sid, data):
     """Track user online status"""
-    user_id = data.get('user_id')
-    online_users[sid] = user_id
-    print(f"👤 User {user_id} is online (sid: {sid})")
-    await sio.emit('user_online', {'user_id': user_id})
+    try:
+        user_id = data.get('user_id')
+        if not user_id:
+            return
+        online_users[sid] = user_id
+        print(f"👤 User {user_id} is online (sid: {sid})")
+        await sio.emit('user_online', {'user_id': user_id})
+    except Exception as e:
+        print(f"Error in user_online: {e}")
 
 @sio.event
 async def join_conversation(sid, data):
     """User joins a conversation room"""
-    conversation_id = data.get('conversation_id')
-    user_id = data.get('user_id')
-    
-    await sio.enter_room(sid, conversation_id)
-    print(f"👤 User {user_id} joined conversation {conversation_id}")
-    
-    await sio.emit('joined_conversation', {
-        'conversation_id': conversation_id,
-        'user_id': user_id
-    }, room=conversation_id)
+    try:
+        conversation_id = data.get('conversation_id')
+        user_id = data.get('user_id')
+        
+        if not conversation_id or not user_id:
+            return
+        
+        await sio.enter_room(sid, conversation_id)
+        print(f"👤 User {user_id} joined conversation {conversation_id}")
+        
+        await sio.emit('joined_conversation', {
+            'conversation_id': conversation_id,
+            'user_id': user_id
+        }, room=conversation_id)
+    except Exception as e:
+        print(f"Error in join_conversation: {e}")
 
 @sio.event
 async def leave_conversation(sid, data):
     """User leaves a conversation room"""
-    conversation_id = data.get('conversation_id')
-    user_id = data.get('user_id')
-    
-    await sio.leave_room(sid, conversation_id)
-    print(f"👤 User {user_id} left conversation {conversation_id}")
+    try:
+        conversation_id = data.get('conversation_id')
+        user_id = data.get('user_id')
+        
+        if not conversation_id:
+            return
+        
+        await sio.leave_room(sid, conversation_id)
+        print(f"👤 User {user_id} left conversation {conversation_id}")
+    except Exception as e:
+        print(f"Error in leave_conversation: {e}")
 
 @sio.event
 async def send_message(sid, data):
     """Handle real-time message"""
-    conversation_id = data.get('conversation_id')
-    print(f"📨 Message sent to conversation {conversation_id}")
-    print(f"Message data: {data}")
-    await sio.emit('new_message', data, room=conversation_id)
+    try:
+        conversation_id = data.get('conversation_id')
+        if not conversation_id:
+            return
+        print(f"📨 Message sent to conversation {conversation_id}")
+        await sio.emit('new_message', data, room=conversation_id)
+    except Exception as e:
+        print(f"Error in send_message: {e}")
 
 @sio.event
 async def typing(sid, data):
     """Handle typing indicator"""
-    conversation_id = data.get('conversation_id')
-    user_id = data.get('user_id')
-    is_typing = data.get('is_typing', True)
-    
-    await sio.emit('user_typing', {
-        'conversation_id': conversation_id,
-        'user_id': user_id,
-        'is_typing': is_typing
-    }, room=conversation_id, skip_sid=sid)
-    
-    print(f"⌨️ User {user_id} typing: {is_typing}")
+    try:
+        conversation_id = data.get('conversation_id')
+        user_id = data.get('user_id')
+        is_typing = data.get('is_typing', True)
+        
+        if not conversation_id or not user_id:
+            return
+        
+        await sio.emit('user_typing', {
+            'conversation_id': conversation_id,
+            'user_id': user_id,
+            'is_typing': is_typing
+        }, room=conversation_id, skip_sid=sid)
+        
+        print(f"⌨️ User {user_id} typing: {is_typing}")
+    except Exception as e:
+        print(f"Error in typing: {e}")
 
 @sio.event
 async def message_read(sid, data):
     """Handle read receipt"""
-    conversation_id = data.get('conversation_id')
-    message_id = data.get('message_id')
-    user_id = data.get('user_id')
-    
-    await sio.emit('message_read', {
-        'message_id': message_id,
-        'user_id': user_id
-    }, room=conversation_id)
-    
-    print(f"✓✓ Message {message_id} read by {user_id}")
+    try:
+        conversation_id = data.get('conversation_id')
+        message_id = data.get('message_id')
+        user_id = data.get('user_id')
+        
+        if not all([conversation_id, message_id, user_id]):
+            return
+        
+        await sio.emit('message_read', {
+            'message_id': message_id,
+            'user_id': user_id
+        }, room=conversation_id)
+        
+        print(f"✓✓ Message {message_id} read by {user_id}")
+    except Exception as e:
+        print(f"Error in message_read: {e}")
 
 @sio.event
 async def voice_call_request(sid, data):
     """Handle voice call request"""
-    conversation_id = data.get('conversation_id')
-    caller_id = data.get('caller_id')
-    
-    await sio.emit('incoming_call', {
-        'conversation_id': conversation_id,
-        'caller_id': caller_id
-    }, room=conversation_id, skip_sid=sid)
-    
-    print(f"📞 Call request from {caller_id}")
+    try:
+        conversation_id = data.get('conversation_id')
+        caller_id = data.get('caller_id')
+        
+        if not conversation_id or not caller_id:
+            return
+        
+        await sio.emit('incoming_call', {
+            'conversation_id': conversation_id,
+            'caller_id': caller_id
+        }, room=conversation_id, skip_sid=sid)
+        
+        print(f"📞 Call request from {caller_id}")
+    except Exception as e:
+        print(f"Error in voice_call_request: {e}")
 
 if __name__ == "__main__":
     import uvicorn
