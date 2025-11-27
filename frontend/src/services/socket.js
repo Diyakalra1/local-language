@@ -2,6 +2,8 @@ import { io } from 'socket.io-client';
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:8000';
 
+// ... rest of your code remains the same
+
 class SocketService {
   constructor() {
     this.socket = null;
