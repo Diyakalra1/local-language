@@ -3,14 +3,13 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-// TODO: Replace with your Firebase config from Step 8.4
 const firebaseConfig = {
-  apiKey: "AIzaSyA7hJEtIEqOHxzrdsGo2lTUMTM83AEkGGk",
-  authDomain: "local-language-e2737.firebaseapp.com",
-  projectId: "local-language-e2737",
-  storageBucket: "local-language-e2737.firebasestorage.app",
-  messagingSenderId: "510957096246",
-  appId: "1:510957096246:web:9afdc33d84fb002c667797"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "replace-me",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "replace-me",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "replace-me",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "replace-me",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "replace-me",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "replace-me"
 };
 
 // Initialize Firebase

@@ -133,6 +133,14 @@ npm run dev
 
 Frontend will run on: http://localhost:5173
 
+## 🚀 Deployment
+
+For production deployment with real-time chat support, see:
+
+- `DEPLOYMENT.md` (Render backend + Vercel frontend)
+- `backend/.env.example`
+- `frontend/.env.example`
+
 ## 📖 Usage
 
 1. **Register** - Create an account with email and password

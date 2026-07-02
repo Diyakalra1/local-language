@@ -26,10 +26,12 @@ class Settings(BaseSettings):
     
     # CORS - Frontend URLs
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    SOCKET_CORS_ORIGINS: str | None = None
     
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"
 
     def get_firebase_credentials(self):
         """Get Firebase credentials from various sources (production-ready)"""

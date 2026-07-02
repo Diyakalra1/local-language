@@ -4,6 +4,9 @@ import socketio
 from .api import auth, chat
 from .core.config import settings
 
+def parse_origins(origins_value: str):
+    return [origin.strip() for origin in origins_value.split(',') if origin.strip()]
+
 # Create FastAPI app
 app = FastAPI(
     title="Local Language Integrator API",
@@ -12,9 +15,12 @@ app = FastAPI(
 )
 
 # Create Socket.IO server with proper CORS
+allowed_origins = parse_origins(settings.ALLOWED_ORIGINS)
+socket_origins = parse_origins(settings.SOCKET_CORS_ORIGINS or settings.ALLOWED_ORIGINS)
+
 sio = socketio.AsyncServer(
     async_mode='asgi',
-    cors_allowed_origins='*',
+    cors_allowed_origins=socket_origins,
     logger=True,
     engineio_logger=True
 )
@@ -23,7 +29,6 @@ sio = socketio.AsyncServer(
 socket_app = socketio.ASGIApp(sio, app)
 
 # CORS middleware - Use settings
-allowed_origins = settings.ALLOWED_ORIGINS.split(',')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,

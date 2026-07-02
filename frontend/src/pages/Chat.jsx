@@ -21,8 +21,18 @@ export default function Chat() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [partnerTyping, setPartnerTyping] = useState(false);
   const [partnerOnline, setPartnerOnline] = useState(false);
+  const [activityStats, setActivityStats] = useState({
+    liveMessages: 0,
+    typingEvents: 0,
+    onlineEvents: 0,
+  });
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const partnerRef = useRef(null);
+
+  useEffect(() => {
+    partnerRef.current = partner;
+  }, [partner]);
 
   useEffect(() => {
     if (!user) {
@@ -51,6 +61,7 @@ export default function Chat() {
 
       socketService.onNewMessage((data) => {
         addMessage(data);
+        setActivityStats((prev) => ({ ...prev, liveMessages: prev.liveMessages + 1 }));
         if (data.sender_id !== user.id) {
           socketService.markMessageRead(conversationId, data.id, user.id);
         }
@@ -59,17 +70,21 @@ export default function Chat() {
       socketService.onUserTyping((data) => {
         if (data.user_id !== user.id) {
           setPartnerTyping(data.is_typing);
+          if (data.is_typing) {
+            setActivityStats((prev) => ({ ...prev, typingEvents: prev.typingEvents + 1 }));
+          }
         }
       });
 
       socketService.onUserOnline((data) => {
-        if (partner && data.user_id === partner.id) {
+        if (partnerRef.current && data.user_id === partnerRef.current.id) {
           setPartnerOnline(true);
+          setActivityStats((prev) => ({ ...prev, onlineEvents: prev.onlineEvents + 1 }));
         }
       });
 
       socketService.onUserOffline((data) => {
-        if (partner && data.user_id === partner.id) {
+        if (partnerRef.current && data.user_id === partnerRef.current.id) {
           setPartnerOnline(false);
         }
       });
@@ -84,7 +99,7 @@ export default function Chat() {
     return () => {
       socketService.disconnect();
     };
-  }, [conversationId, user, navigate, partner]);
+  }, [conversationId, user, navigate, loadMessages, addMessage]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -208,6 +223,11 @@ export default function Chat() {
               >
                 <Languages className="w-5 h-5" />
               </button>
+              <div className="hidden md:flex items-center gap-2 text-xs bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg">
+                <span className="text-green-600 dark:text-green-300">Live: {activityStats.liveMessages}</span>
+                <span className="text-blue-600 dark:text-blue-300">Typing: {activityStats.typingEvents}</span>
+                <span className="text-purple-600 dark:text-purple-300">Online: {activityStats.onlineEvents}</span>
+              </div>
             </div>
           </div>
         </div>
