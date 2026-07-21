@@ -78,7 +78,12 @@ A real-time multilingual messaging platform that enables users to communicate in
 - User registration and login
 - Cloud deployment
 ---
+## Challenges Faced
 
+| Challenge | Solution |
+|------------|----------|
+| **Real-time message delivery** | Messages were initially received only after a page refresh. This was resolved by ensuring users establish a Socket.IO connection and join the appropriate conversation room before sending or receiving messages. |
+| **Responsive user interface** | Replaced fixed-width layouts with responsive Tailwind CSS utilities to ensure a consistent experience across different screen sizes and deployments. |
 
 
 ## Technical Specifications
