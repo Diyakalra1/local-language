@@ -30,12 +30,12 @@ export default function Login() {
   };
 
   return (
-<div className="h-[1300px] bg-[#FFFFFF] dark:bg-gray-900 flex items-center justify-center  px-10 xl:px-32 overflow-hidden">   
-<div className="grid lg:grid-cols-[50%_50%] w-full max-w-[2200px] h-[900px]  gap-12">      
-<div className="hidden lg:flex flex-col justify-center pl-40 pr-20">          <img
+<div className="min-h-screen bg-[#FFFFFF] dark:bg-gray-900 flex items-center justify-center px-6 lg:px-16 py-10">   
+<div className="grid lg:grid-cols-2 items-center w-full max-w-7xl gap-16">      
+<div className="hidden lg:flex flex-col justify-center px-8">          <img
             src="/logo.png"
             alt="LLI"
-            className="w-25 h-25 "
+            className="w-full max-w-md mx-auto"
           />
 
           <h1 className="text-5xl font-bold text-[#12355B] leading-tight">
@@ -97,7 +97,7 @@ export default function Login() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="bg-white dark:bg-gray-800 rounded-[36px] shadow-2xl border border-orange-100 p-14 w-full max-w-[560px] min-h-[760px] mx-auto ">
+        <div className="bg-white dark:bg-gray-800 rounded-[36px] shadow-2xl border border-orange-100 p-10 w-full max-w-lg mx-auto">
           <div className="flex justify-between items-center mb-8">
             <img
               src="/logo.png"
