@@ -42,10 +42,13 @@ export default function Chat() {
 
     const initChat = async () => {
       const socket = socketService.connect();
-      setIsConnected(true);
-      socketService.userOnline(user.id);
-      socketService.joinConversation(conversationId, user.id);
 
+      socket.on("connect", () => {
+          setIsConnected(true);
+          socketService.userOnline(user.id);
+          socketService.joinConversation(conversationId, user.id);
+      });
+      
       try {
         const conversation = await chatAPI.getConversation(conversationId);
         const partnerId = conversation.participant1_id === user.id 
