@@ -71,6 +71,7 @@ A real-time multilingual messaging platform that enables users to communicate in
 ## Features
 
 - Real-time messaging using Socket.IO
+- Text to audio and audio to text capabilities
 - Automatic translation before message delivery
 - Supports 14+ Indian languages
 - Persistent chat history using Firestore
