@@ -249,7 +249,19 @@ export default function Chat() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full">
+      <div
+  className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full relative"
+  style={{
+    backgroundColor: "#FFF9F3",
+    backgroundImage: `
+      radial-gradient(circle at 20px 20px, rgba(180,160,140,.10) 2px, transparent 2px),
+      radial-gradient(circle at 80px 60px, rgba(180,160,140,.08) 3px, transparent 3px),
+      radial-gradient(circle at 140px 30px, rgba(180,160,140,.08) 2px, transparent 2px),
+      radial-gradient(circle at 220px 100px, rgba(180,160,140,.10) 2px, transparent 2px)
+    `,
+    backgroundSize: "260px 260px",
+  }}
+>
         {messages.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
