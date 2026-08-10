@@ -73,7 +73,7 @@ export default function Login() {
           </div>
 
           <h2 className="text-4xl font-bold text-[#12355B]">
-            Welcome Back 👋
+            Welcome Back!
           </h2>
 
           <p className="text-2xl text-slate-500 mt-3 mb-8">
@@ -127,34 +127,7 @@ export default function Login() {
 
           {/* FEATURES */}
 
-<div className="mt-8 border-t border-orange-100 pt-6">
 
-  <h3 className="text-xl font-semibold text-[#12355B] mb-4">
-    Key Features
-  </h3>
-
-  <ul className="space-y-3 text-[15px] text-slate-600 leading-7">
-
-    <li className="flex gap-3">
-      <span className="text-orange-500 font-bold">•</span>
-      <p className="text-2xl">Real-time multilingual messaging.</p>
-    </li>
-
-    
-
-    <li className="flex gap-3">
-      <span className="text-2xl text-orange-500 font-bold">•</span>
-      <p className="text-2xl" >Voice-to-text and speech translation.</p>
-    </li>
-
-    <li className="flex gap-3">
-      <span className="text-orange-500 font-bold">•</span>
-      <p className="text-2xl" >Supports 14+ Indian languages.</p>
-    </li>
-
-  </ul>
-
-</div>
 
 <p className=" text-4xl text-center mt-8 ">
   Don't have an account?{" "}
