@@ -61,15 +61,15 @@ export default function Login() {
             />
 
             <button
-              onClick={toggleTheme}
-              className="p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
-              ) : (
-                <Moon className="w-5 h-5 text-gray-700" />
-              )}
-            </button>
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-orange-100 bg-orange-50 hover:bg-orange-100 transition-all duration-200"
+          >
+            {isDarkMode ? (
+              <Sun className="w-5 h-5 text-orange-500" />
+            ) : (
+              <Moon className="w-5 h-5 text-slate-600" />
+            )}
+          </button>
           </div>
 
           <h2 className="text-4xl font-bold text-[#12355B]">
