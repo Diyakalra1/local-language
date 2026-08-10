@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException
-from ..models.user import UserCreate, UserLogin, Token
-from ..services.auth_service import auth_service
-from ..services.firebase_service import firebase_service
+from fastapi import APIRouter, HTTPException   #for creating end points and showing errors
+from ..models.user import UserCreate, UserLogin, Token  #pydantic models that influence the shape of request and response
+from ..services.auth_service import auth_service # business logic - services for the authorization
+from ..services.firebase_service import firebase_service # services that help talking to firebase
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"]) # every route in this file starts from auth
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=Token) # this fucntion shall handle the post request to auth/register
 async def register(user_data: UserCreate):
     """Register a new user"""
     result = await auth_service.register_user(user_data)
