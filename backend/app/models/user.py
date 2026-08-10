@@ -22,7 +22,7 @@ class User(UserBase):
 # user in db contains everything from user and a hashed password
 class UserInDB(User):
     hashed_password: str
-
+#Token  is the response model for login and registration.
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
