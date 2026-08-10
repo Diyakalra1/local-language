@@ -19,14 +19,14 @@ class FirebaseService:
                 print(f"❌ Firebase initialization error: {e}")
                 raise
         
-        self.db = firestore.client()
+        self.db = firestore.client() # FireStore Collection
     
     # User operations
     async def create_user(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
         try:
-            user_ref = self.db.collection('users').document()
-            user_data['id'] = user_ref.id
-            user_ref.set(user_data)
+            user_ref = self.db.collection('users').document()  # Create a new document refernce
+            user_data['id'] = user_ref.id # add the id to the user data
+            user_ref.set(user_data) # add user to firestore
             return user_data
         except Exception as e:
             print(f"Error creating user: {e}")
