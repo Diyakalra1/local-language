@@ -48,52 +48,7 @@ export default function Login() {
             Real-time multilingual messaging powered by instant translation.
           </p>
 
-          <div className="mt-12 space-y-5">
-            <div className="flex items-center gap-4 bg-white rounded-3xl shadow-md p-5 border border-orange-100">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
-                💬
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-[#12355B]">
-                  Real-Time Chat
-                </h3>
-                <p className="text-sm text-slate-500">
-                  Instant multilingual conversations.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 bg-white rounded-3xl shadow-md p-5 border border-orange-100">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
-                🎤
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-[#12355B]">
-                  Voice Translation
-                </h3>
-                <p className="text-sm text-slate-500">
-                  Speak naturally in your preferred language.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 bg-white rounded-3xl shadow-md p-5 border border-orange-100">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
-                🌏
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-[#12355B]">
-                  14+ Indian Languages
-                </h3>
-                <p className="text-sm text-slate-500">
-                  Built specifically for India.
-                </p>
-              </div>
-            </div>
-          </div>
+          
         </div>
 
         {/* RIGHT SIDE */}
